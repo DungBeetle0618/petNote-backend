@@ -1,4 +1,4 @@
-package com.petnote.api;
+package com.petnote;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
