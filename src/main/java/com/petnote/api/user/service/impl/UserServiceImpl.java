@@ -1,6 +1,6 @@
 package com.petnote.api.user.service.impl;
 
-import com.petnote.api.user.dao.UserRepository;
+import com.petnote.api.user.repository.UserRepository;
 import com.petnote.api.user.entity.User;
 import com.petnote.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.petnote.api.user.dao;
+package com.petnote.api.user.repository;
 
 import com.petnote.api.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

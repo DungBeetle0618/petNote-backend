@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mariadb://183.111.138.245:3306/dbrjsdml?characterEncoding=UTF-8&serverTimezone=UTC
-    username:
-    password:
+    username: dbrjsdml
+    password: xptmxm12!
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:
       pool-name: HikariPool
