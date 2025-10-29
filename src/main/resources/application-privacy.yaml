@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://183.111.138.245:3306/dbrjsdml?characterEncoding=UTF-8&serverTimezone=UTC
+    username:
+    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      pool-name: HikariPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      auto-commit: false
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
