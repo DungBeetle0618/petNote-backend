@@ -1,12 +1,12 @@
 package com.petnote.api.user.entity;
 
+import com.petnote.api.auth.dto.LoginDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.Instant;
@@ -16,7 +16,10 @@ import java.time.Instant;
 @Entity
 @Table(name = "PN_USER")
 @Alias("User")
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserEntity {
     @Id
     @Size(max = 20)
     @Column(name = "USER_ID", nullable = false, length = 20)
@@ -75,5 +78,13 @@ public class User {
 
     @Column(name = "UPDATE_DATE")
     private Instant updateDate;
+
+    public LoginDTO toLoginDTO(){
+        return LoginDTO.builder()
+                .userId(this.userId)
+                .userName(this.userName)
+                .email(this.email)
+                .build();
+    }
 
 }
