@@ -1,9 +1,9 @@
 package com.petnote.api.user.service;
 
-import com.petnote.api.user.entity.User;
+import com.petnote.api.user.entity.UserEntity;
 
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> getUserByUserId(String userId);
+    Optional<UserEntity> getUserByUserId(String userId);
 }

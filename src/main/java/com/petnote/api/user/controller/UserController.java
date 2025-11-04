@@ -1,6 +1,6 @@
 package com.petnote.api.user.controller;
 
-import com.petnote.api.user.entity.User;
+import com.petnote.api.user.entity.UserEntity;
 import com.petnote.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class UserController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> userFindById(@PathVariable String userId) {
-        Optional<User> user = userService.getUserByUserId(userId);
+        Optional<UserEntity> user = userService.getUserByUserId(userId);
         if(user.isPresent()){
             return ResponseEntity.ok().body(Map.of("userId", user.get()));
         }else{

@@ -1,0 +1,29 @@
+package com.petnote.api.auth.dto;
+
+import com.petnote.api.user.entity.UserEntity;
+import lombok.Data;
+
+@Data
+public class SignupDTO {
+    private String userId;
+    private String password;
+    private String email;
+    private String phone;
+    private String userName;
+    private String profileImg;
+    private String snsType;
+    private String snsToken;
+    private String accessToken;
+    private String refreshToken;
+
+    public UserEntity toUserEntity(){
+        return UserEntity.builder()
+                .userId(this.userId)
+                .password(this.password)
+                .email(this.email)
+                .phone(this.phone)
+                .userName(this.userName)
+                .build();
+    }
+
+}
