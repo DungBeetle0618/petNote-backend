@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -54,20 +55,10 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(a -> a
                     .requestMatchers("/auth/signup", "/auth/login", "/auth/logout", "/auth/refresh").permitAll()
                     .anyRequest().authenticated())
-                .authenticationProvider(authenticationProvider())
-            .formLogin(form -> form
-                            .loginProcessingUrl("/login")
-                            .usernameParameter("userId")
-                            .passwordParameter("password")
-                            .successForwardUrl("/")
-                            .failureForwardUrl("/")
-
-            ).logout(logout -> logout
-                    .logoutUrl("/auth/logout")
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-            )
-        ;
+            .authenticationProvider(authenticationProvider())
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
