@@ -8,14 +8,12 @@ import com.petnote.api.user.entity.UserEntity;
 import com.petnote.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@Repository
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
@@ -29,8 +27,8 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        if(signupValidationCheck(dto)){
-            return true;
+        if(!signupValidationCheck(dto)){
+            return false;
         }
 
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));

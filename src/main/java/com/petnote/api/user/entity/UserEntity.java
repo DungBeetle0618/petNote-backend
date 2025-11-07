@@ -29,8 +29,8 @@ public class UserEntity {
     @Column(name = "PASSWORD", length = 256)
     private String password;
 
-    @Size(max = 10)
-    @Column(name = "EMAIL", length = 10)
+    @Size(max = 30)
+    @Column(name = "EMAIL", length = 30)
     private String email;
 
     @Size(max = 14)

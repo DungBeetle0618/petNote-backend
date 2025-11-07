@@ -21,6 +21,7 @@ public class LoginDTO {
     private String snsToken;
     private String accessToken;
     private String refreshToken;
+    private String deviceId;
 
     public UserEntity toUserEntity(){
         return UserEntity.builder()

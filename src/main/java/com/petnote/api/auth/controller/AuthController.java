@@ -11,6 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,10 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @RequiredArgsConstructor
-@RestController("/auth")
+@RestController
+@RequestMapping("/auth")
 @Validated
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -43,6 +46,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<SignupDTO> signup(@RequestBody SignupDTO dto) {
         if(authService.signup(dto)){
+            dto.setPassword(null);
             return ResponseEntity.ok().body(dto);
         }else{
             return ResponseEntity.badRequest().body(null);
@@ -58,7 +62,8 @@ public class AuthController {
 
         String access = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
         String refresh = jwtProvider.generateRefreshToken(access);
-        refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
+        //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
+        //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refresh)
                 //TODO 운영 시 secure -> true
@@ -90,24 +95,15 @@ public class AuthController {
         var claims = jwtProvider.parseToken(refreshToken).getBody();
         String userId = claims.getSubject();
 
-        if(!refreshTokenService.validate(userId, deviceId, refreshToken)){
+        /*if(!refreshTokenService.validate(userId, deviceId, refreshToken)){
             return ResponseEntity.status(401).build();
-        }
+        }*/
 
         String newAccess = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
-        String newRefresh = jwtProvider.generateRefreshToken(userId);
-        refreshTokenService.save(userId, newAccess, newRefresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
-
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefresh)
-                .httpOnly(true)
-                //TODO 운영 시 secure -> true
-                .secure(false)
-                .sameSite("Lax")
-                .path("/auth")
-                .maxAge(Duration.ofDays(14)).build();
+        //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
+        //refreshTokenService.save(userId, newAccess, newRefresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new TokenRes(newAccess));
     }
 
