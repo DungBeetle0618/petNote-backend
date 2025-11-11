@@ -5,8 +5,10 @@ import com.petnote.api.auth.dto.SignupDTO;
 import com.petnote.api.auth.jwt.JwtProvider;
 import com.petnote.api.auth.refresh.RefreshTokenService;
 import com.petnote.api.auth.service.AuthService;
+import com.petnote.api.user.dto.ResponseDTO;
 import com.petnote.api.user.entity.UserEntity;
 import com.petnote.api.user.service.UserService;
+import com.petnote.global.exception.PetNoteException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.validation.constraints.NotBlank;
@@ -45,6 +47,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignupDTO> signup(@RequestBody SignupDTO dto) {
+        log.info("signup dto: {}", dto);
         if(authService.signup(dto)){
             dto.setPassword(null);
             return ResponseEntity.ok().body(dto);
@@ -55,6 +58,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenRes> login(@RequestBody LoginReq req) {
+        log.info("login req: {}", req);
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(req.userId(), req.password()));
         var user = (User) authentication.getPrincipal();
@@ -122,7 +126,24 @@ public class AuthController {
                 .path("/auth")
                 .maxAge(0)
                 .build();
-
         return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+    }
+
+    @GetMapping("/check-userId")
+    public ResponseEntity<ResponseDTO> checkId(@RequestParam String userId) {
+        Optional<UserEntity> check = userService.getUserByUserId(userId);
+        if(check.isPresent()){
+            return ResponseEntity.ok().body(
+                    ResponseDTO.builder()
+                            .message("불가능 ID")
+                            .status(false)
+                            .build());
+        }else{
+            return ResponseEntity.ok().body(
+                    ResponseDTO.builder()
+                            .message("가능 ID")
+                            .status(true)
+                            .build());
+        }
     }
 }

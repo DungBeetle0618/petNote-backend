@@ -55,6 +55,10 @@ public class AuthServiceImpl implements AuthService {
 
     private boolean signupValidationCheck(SignupDTO dto){
         // id 중복 체크
+        if(dto == null){
+            return false;
+        }
+
         if(dto.getUserId().isEmpty()){
             return false;
         }
