@@ -46,7 +46,7 @@ public class AuthController {
     public record TokenRes(String accessToken) {}
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupDTO> signup(@RequestBody SignupDTO dto) {
+    public ResponseEntity<SignupDTO> signup(@RequestBody SignupDTO dto) throws PetNoteException {
         log.info("signup dto: {}", dto);
         if(authService.signup(dto)){
             dto.setPassword(null);
