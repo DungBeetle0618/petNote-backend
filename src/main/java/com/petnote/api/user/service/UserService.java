@@ -6,4 +6,8 @@ import java.util.Optional;
 
 public interface UserService {
     Optional<UserEntity> getUserByUserId(String userId);
+    Optional<UserEntity> getUserByEmail(String email);
+    Optional<UserEntity> getUserByUserIdAndEmail(String userId, String email);
+
+    int updateTempPasswordByUserIdAndEmail(String userId, String email, String password);
 }

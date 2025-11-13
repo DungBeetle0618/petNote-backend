@@ -19,10 +19,10 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
 
-#  data:
-#    redis:
-#      host: localhost
-#      port: 6379
+  data:
+    redis:
+      host: localhost
+      port: 6379
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.petnote
@@ -54,5 +54,9 @@ app:
     access-exp-minutes: 15
     refresh-exp-days: 14
     secret: "aZbK93jf39Jf02FslkFja3021hfjs93Kd8sfl3kfj9w9s2dkj3"
+auth:
+  verify:
+    code-ttl-min: 10
+    final-token-ttl-min: 15
 server:
   port: 9090

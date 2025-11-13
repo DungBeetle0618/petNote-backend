@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PetNoteException extends Exception {
     private int status;
+    private String result;
     private String message;
 }
