@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByUserIdAndEmail(String userId, String email);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)

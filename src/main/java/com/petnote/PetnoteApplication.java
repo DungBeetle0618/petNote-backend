@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(AuthVerifyProperties.class)
+@EnableConfigurationProperties({AuthVerifyProperties.class})
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @MapperScan("com.petnote.api.**.mapper")
 public class PetnoteApplication {

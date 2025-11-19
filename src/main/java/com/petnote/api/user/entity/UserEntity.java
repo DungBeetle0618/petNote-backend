@@ -45,6 +45,10 @@ public class UserEntity {
     @Column(name = "PROFILE_IMG", length = 100)
     private String profileImg;
 
+    @Size(max = 30)
+    @Column(name = "NICKNAME", length = 30)
+    private String nickname;
+
     @Column(name = "PASSWORD_UPDATE_DATE")
     private Instant passwordUpdateDate;
 

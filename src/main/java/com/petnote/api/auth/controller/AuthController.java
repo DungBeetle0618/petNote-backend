@@ -88,14 +88,6 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new TokenRes(access));
-
-        /*Optional<UserEntity> user = userService.getUserByUserId(dto.getUserId());
-        if(user.isPresent()){
-            return ResponseEntity.ok().body(user.get().toLoginDTO());
-        }else{
-            return ResponseEntity.badRequest().body(null);
-        }*/
-
     }
 
     @PostMapping("/refresh")
