@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,10 @@ public class AuthController {
 
     private final VerifyCodeService codeSvc;
     private final AuthVerifyProperties props;
-    private final static int REFRESH_TOKEN_EXPIRE_DAY = 14;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.jwt.refresh-exp-days}")
+    private int REFRESH_TOKEN_EXPIRE_DAY;
 
     public record LoginReq(@NotBlank String userId, @NotBlank String password, String deviceId) {}
     public record TokenRes(String accessToken) {}

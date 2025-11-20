@@ -21,8 +21,8 @@ import java.time.Instant;
 @AllArgsConstructor
 public class UserEntity {
     @Id
-    @Size(max = 20)
-    @Column(name = "USER_ID", nullable = false, length = 20)
+    @Size(max = 50)
+    @Column(name = "USER_ID", nullable = false, length = 50)
     private String userId;
 
     @Size(max = 256)
