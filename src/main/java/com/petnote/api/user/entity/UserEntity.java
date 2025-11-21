@@ -21,8 +21,8 @@ import java.time.Instant;
 @AllArgsConstructor
 public class UserEntity {
     @Id
-    @Size(max = 20)
-    @Column(name = "USER_ID", nullable = false, length = 20)
+    @Size(max = 50)
+    @Column(name = "USER_ID", nullable = false, length = 50)
     private String userId;
 
     @Size(max = 256)
@@ -44,6 +44,10 @@ public class UserEntity {
     @Size(max = 100)
     @Column(name = "PROFILE_IMG", length = 100)
     private String profileImg;
+
+    @Size(max = 30)
+    @Column(name = "NICKNAME", length = 30)
+    private String nickname;
 
     @Column(name = "PASSWORD_UPDATE_DATE")
     private Instant passwordUpdateDate;

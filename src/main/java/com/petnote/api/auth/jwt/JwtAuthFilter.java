@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,13 +30,11 @@ import java.util.Set;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final CustomUserDetailService customUserDetailService;
-
-    private static final Set<String> SKIP = Set.of("/auth/login", "/auth/signup", "/auth/refresh");
+    private final RequestMatcher permitAllMatcher;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return SKIP.contains(path);
+        return permitAllMatcher.matches(request);
     }
 
 
