@@ -1,7 +1,7 @@
 package com.petnote.api.common.service.impl;
 
 import com.petnote.api.common.dto.CommonCodeDTO;
-import com.petnote.api.common.repository.CommonCodeRepository;
+import com.petnote.api.common.mapper.CommonCodeMapper;
 import com.petnote.api.common.service.CommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CommonCodeServiceImpl implements CommonCodeService {
-    private final CommonCodeRepository commonCodeRepository;
+    private final CommonCodeMapper commonCodeMapper;
 
     /**
      * 공통코드 조회
@@ -22,7 +22,7 @@ public class CommonCodeServiceImpl implements CommonCodeService {
      */
     @Override
     public CommonCodeDTO selectCommonCode(CommonCodeDTO dto) {
-        return commonCodeRepository.selectCommonCode(dto);
+        return commonCodeMapper.selectCommonCode(dto);
     }
 
     /**
@@ -32,6 +32,6 @@ public class CommonCodeServiceImpl implements CommonCodeService {
      */
     @Override
     public List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto) {
-        return commonCodeRepository.selectCommonCodeList(dto);
+        return commonCodeMapper.selectCommonCodeList(dto);
     }
 }
