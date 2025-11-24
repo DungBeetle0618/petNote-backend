@@ -14,7 +14,8 @@ public class SecurityMatchersConfig {
             PathPatternRequestMatcher.withDefaults().matcher("/auth/**"),
             PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
             PathPatternRequestMatcher.withDefaults().matcher("/actuator/**"),
-            PathPatternRequestMatcher.withDefaults().matcher("/error")
+            PathPatternRequestMatcher.withDefaults().matcher("/error"),
+            PathPatternRequestMatcher.withDefaults().matcher("/api/**")
         );
     }
 

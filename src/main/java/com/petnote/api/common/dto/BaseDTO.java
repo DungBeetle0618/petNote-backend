@@ -21,4 +21,26 @@ public class BaseDTO {
     private Timestamp insertDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private Timestamp updateDate;
+
+    /* 페이징 */
+    private Integer page;
+    private Integer rows;
+    private Integer records;
+
+
+    public void setRecords( Integer records) {
+        this.records = records;
+        // 만약 page가 전체 페이지 보다 크면 마직막페이지로 설정한다.
+        if( records!=null && rows != null && page != null) {
+            int total = (records - 1 ) / rows + 1;
+            if( page > total ) {
+                page = total;
+            }
+        }
+    }
+
+    public Integer getTotal() {
+        return  records!=null && rows != null ?  (records - 1 ) / rows + 1 : null;
+
+    }
 }

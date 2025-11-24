@@ -1,8 +1,11 @@
 package com.petnote.api.common.repository;
 
-import org.springframework.stereotype.Repository;
+import com.petnote.api.common.dto.CommonCodeDTO;
+import org.apache.ibatis.annotations.Mapper;
 
-@Repository
-public class CommonCodeRepository {
+import java.util.List;
 
+@Mapper
+public interface CommonCodeRepository {
+    List<CommonCodeDTO> selectCommonCode(CommonCodeDTO dto);
 }

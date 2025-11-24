@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petnote.api.common.repository.CommonCodeRepository">
+
+    <select id="selectCommonCode" resultType="com.petnote.api.common.dto.CommonCodeDTO" >
+        /* CommonCodeRepository.selectCommonCode 공통코드 조회 */
+        SELECT code, kor_name, eng_name
+        FROM PN_CODE
+        WHERE code_group1 = #{codeGroup1}
+            AND code_group2 = #{codeGroup2}
+            AND code = #{code}
+    </select>
+
+    <select id="selectCommonCodeList" resultType="com.petnote.api.common.dto.CommonCodeDTO" >
+        /* CommonCodeRepository.selectCommonCodeList 공통코드 리스트 조회 */
+        SELECT code, kor_name, eng_name
+        FROM pn_code
+        WHERE code_group1 = #{codeGroup1}
+          AND code_group2 = #{codeGroup2}
+        ORDER BY sort_seq, code
+    </select>
+
+
+</mapper>
