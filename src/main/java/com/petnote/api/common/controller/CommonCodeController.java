@@ -5,10 +5,7 @@ import com.petnote.api.common.service.CommonCodeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +25,7 @@ public class CommonCodeController {
      * @return
      */
     @GetMapping("/selectListForAxios")
-    public Map<String, Object> selectListForAxios(@RequestBody CommonCodeDTO dto) {
+    public Map<String, Object> selectListForAxios(CommonCodeDTO dto) {
         Map<String, Object> resultMap = new HashMap<>();
 
         List<CommonCodeDTO> list = commonCodeService.selectCommonCodeList(dto);
@@ -44,7 +41,7 @@ public class CommonCodeController {
      * @return
      */
     @GetMapping("/selectForAxios")
-    public Map<String, Object> selectForAxios(@RequestBody CommonCodeDTO dto) {
+    public Map<String, Object> selectForAxios(CommonCodeDTO dto) {
         Map<String, Object> resultMap = new HashMap<>();
 
         resultMap.put("result", "SUCCESS");

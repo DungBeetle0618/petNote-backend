@@ -1,11 +1,11 @@
 package com.petnote.api.common.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
-import org.springframework.stereotype.Service;
 
 @Getter
-@Service
+@Setter
 @ToString(callSuper = true)
 public class CommonCodeDTO extends BaseDTO {
     private String codeGroup1;
