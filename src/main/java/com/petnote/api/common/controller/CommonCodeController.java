@@ -22,16 +22,33 @@ import java.util.Map;
 public class CommonCodeController {
     private final CommonCodeService commonCodeService;
 
-    @GetMapping("/code")
-    public Map<String, Object> selectForAxios(@RequestBody CommonCodeDTO dto) {
+    /**
+     * 공통코드 리스트 조회
+     * @param dto
+     * @return
+     */
+    @GetMapping("/selectListForAxios")
+    public Map<String, Object> selectListForAxios(@RequestBody CommonCodeDTO dto) {
         Map<String, Object> resultMap = new HashMap<>();
-        List<CommonCodeDTO> list = commonCodeService.selectCommonCodeList(dto);
 
+        List<CommonCodeDTO> list = commonCodeService.selectCommonCodeList(dto);
         resultMap.put("result", "SUCCESS");
         resultMap.put("list", list);
-        resultMap.put("page", dto.getPage());
-        resultMap.put("records", dto.getRecords());
-        resultMap.put("total", dto.getTotal());
+
+        return resultMap;
+    }
+
+    /**
+     * 공통코드 조회
+     * @param dto
+     * @return
+     */
+    @GetMapping("/selectForAxios")
+    public Map<String, Object> selectForAxios(@RequestBody CommonCodeDTO dto) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        resultMap.put("result", "SUCCESS");
+        resultMap.put("code", commonCodeService.selectCommonCode(dto));
 
         return resultMap;
     }

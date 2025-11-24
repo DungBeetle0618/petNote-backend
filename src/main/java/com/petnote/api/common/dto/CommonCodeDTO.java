@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Getter
 @Service
-@ToString
+@ToString(callSuper = true)
 public class CommonCodeDTO extends BaseDTO {
     private String codeGroup1;
     private String codeGroup2;

@@ -10,4 +10,6 @@ public interface CommonCodeMapper {
     List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto);
 
     CommonCodeDTO selectCommonCode(CommonCodeDTO dto);
+
+    Integer selectCommonCodeListCount(CommonCodeDTO dto);
 }

@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface CommonCodeService {
     CommonCodeDTO selectCommonCode(CommonCodeDTO dto);
-
     List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto);
 }
