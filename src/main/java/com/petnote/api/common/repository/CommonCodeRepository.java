@@ -7,5 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface CommonCodeRepository {
-    List<CommonCodeDTO> selectCommonCode(CommonCodeDTO dto);
+    List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto);
+
+    CommonCodeDTO selectCommonCode(CommonCodeDTO dto);
 }

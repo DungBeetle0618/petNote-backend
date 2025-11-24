@@ -5,5 +5,7 @@ import com.petnote.api.common.dto.CommonCodeDTO;
 import java.util.List;
 
 public interface CommonCodeService {
-    List<CommonCodeDTO> selectCommonCode(CommonCodeDTO dto);
+    CommonCodeDTO selectCommonCode(CommonCodeDTO dto);
+
+    List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto);
 }

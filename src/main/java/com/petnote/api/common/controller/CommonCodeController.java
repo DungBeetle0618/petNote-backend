@@ -25,7 +25,7 @@ public class CommonCodeController {
     @GetMapping("/code")
     public Map<String, Object> selectForAxios(@RequestBody CommonCodeDTO dto) {
         Map<String, Object> resultMap = new HashMap<>();
-        List<CommonCodeDTO> list = commonCodeService.selectCommonCode(dto);
+        List<CommonCodeDTO> list = commonCodeService.selectCommonCodeList(dto);
 
         resultMap.put("result", "SUCCESS");
         resultMap.put("list", list);

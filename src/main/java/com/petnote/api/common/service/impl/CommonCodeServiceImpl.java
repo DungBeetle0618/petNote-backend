@@ -21,7 +21,17 @@ public class CommonCodeServiceImpl implements CommonCodeService {
      * @return
      */
     @Override
-    public List<CommonCodeDTO> selectCommonCode(CommonCodeDTO dto) {
+    public CommonCodeDTO selectCommonCode(CommonCodeDTO dto) {
         return commonCodeRepository.selectCommonCode(dto);
+    }
+
+    /**
+     * 공통코드 리스트 조회
+     * @param dto
+     * @return
+     */
+    @Override
+    public List<CommonCodeDTO> selectCommonCodeList(CommonCodeDTO dto) {
+        return commonCodeRepository.selectCommonCodeList(dto);
     }
 }
