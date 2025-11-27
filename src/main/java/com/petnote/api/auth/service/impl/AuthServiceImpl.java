@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void deleteAccount(String userId) throws PetNoteException {
-
+        authRepository.deleteAccount(userId);
     }
 
     private boolean signupValidationCheck(SignupDTO dto) throws PetNoteException {

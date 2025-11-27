@@ -76,7 +76,7 @@ public class AuthController {
         String userId = user.getUsername();
         userService.updateLoginDt(userId);
         String access = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
-        String refresh = jwtProvider.generateRefreshToken(access);
+        String refresh = jwtProvider.generateRefreshToken(userId);
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
@@ -117,6 +117,8 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken,
                                        @RequestParam(defaultValue = "device") String deviceId) {
+                log.debug("dete" + refreshToken);
+
         if(refreshToken != null){
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
             //refreshTokenService.invalidate(userId, deviceId);
@@ -135,8 +137,10 @@ public class AuthController {
 
     @PostMapping("/delete-account")
     public ResponseEntity<Void> deleteAccount(@CookieValue(value = "refreshToken", required = false) String refreshToken) throws PetNoteException {
+        log.debug("dete" + refreshToken);
         if(refreshToken != null){
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+            log.debug("dddddd = " + userId);
             authService.deleteAccount(userId);
             //refreshTokenService.invalidate(userId, deviceId);
         }

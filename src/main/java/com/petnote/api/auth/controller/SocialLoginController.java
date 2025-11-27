@@ -37,7 +37,7 @@ public class SocialLoginController {
         log.info("login accessT : {}", loginRequest.getAccessToken());
         LoginDTO loginDTO = socialLoginService.kakaoLogin(loginRequest.getAccessToken());
         String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), Map.of("role", "USER"));
-        String refresh = jwtProvider.generateRefreshToken(access);
+        String refresh = jwtProvider.generateRefreshToken(loginDTO.getUserId());
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
@@ -60,7 +60,7 @@ public class SocialLoginController {
 
         LoginDTO loginDTO = socialLoginService.naverLogin(loginRequest.getAccessToken());
         String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), Map.of("role", "USER"));
-        String refresh = jwtProvider.generateRefreshToken(access);
+        String refresh = jwtProvider.generateRefreshToken(loginDTO.getUserId());
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 

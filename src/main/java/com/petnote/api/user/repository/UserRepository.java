@@ -13,7 +13,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByUserIdAndEmail(String userId, String email);
-    Optional<UserEntity> findByUserIdAndDeleteYnIsNull(String userId);
+    @Query("SELECT u FROM UserEntity u WHERE u.userId = :userId AND (u.deleteYn IS NULL OR u.deleteYn = 'N')")
+    Optional<UserEntity> findByUserIdAndDeleteYnIsNullOrN(String userId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE UserEntity u SET u.password = :password WHERE u.userId = :userId AND u.email = :email")

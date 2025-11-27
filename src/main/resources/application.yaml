@@ -35,6 +35,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 logging:
   level:
+    com.petnote: DEBUG
     org.springframework.security: DEBUG
     com.zaxxer.hikari: INFO
     org.mybatis: DEBUG
