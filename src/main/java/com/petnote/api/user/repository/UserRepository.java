@@ -13,8 +13,12 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByUserIdAndEmail(String userId, String email);
+    Optional<UserEntity> findByUserIdAndDeleteYnIsNull(String userId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE UserEntity u SET u.password = :password WHERE u.userId = :userId AND u.email = :email")
     int updateTempPasswordByUserIdAndEmail(String userId, String email, String password);
+
+    @Query("UPDATE UserEntity u SET u.loginDate = CURRENT_TIMESTAMP WHERE u.userId = :userId")
+    void updateLoginDt(String userId);
 }

@@ -74,8 +74,8 @@ public class UserEntity {
     @Column(name = "REFRESH_TOKEN", length = 256)
     private String refreshToken;
 
-    @Column(name = "USE_YN")
-    private Character useYn;
+    @Column(name = "DELETE_YN")
+    private Character deleteYn;
 
     @Column(name = "INSERT_DATE")
     private Instant insertDate;

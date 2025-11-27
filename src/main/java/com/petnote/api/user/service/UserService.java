@@ -10,6 +10,6 @@ public interface UserService {
     Optional<UserEntity> getUserByNickname(String nickname);
     Optional<UserEntity> getUserByEmail(String email);
     Optional<UserEntity> getUserByUserIdAndEmail(String userId, String email);
-
+    void updateLoginDt(String userId);
     int updateTempPasswordByUserIdAndEmail(String userId, String email, String password);
 }

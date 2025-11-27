@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface AuthService {
     boolean signup(SignupDTO dto) throws PetNoteException;
     LoginDTO login(LoginDTO dto);
+    void deleteAccount(String userId) throws PetNoteException;
 }

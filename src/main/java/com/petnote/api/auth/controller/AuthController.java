@@ -74,7 +74,7 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(req.userId(), req.password()));
         var user = (User) authentication.getPrincipal();
         String userId = user.getUsername();
-
+        userService.updateLoginDt(userId);
         String access = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
         String refresh = jwtProvider.generateRefreshToken(access);
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
@@ -121,6 +121,26 @@ public class AuthController {
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
             //refreshTokenService.invalidate(userId, deviceId);
         }
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                //TODO 운영 시 secure -> true
+                .secure(false)
+                .sameSite("Lax")
+                .path("/auth")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+    }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<Void> deleteAccount(@CookieValue(value = "refreshToken", required = false) String refreshToken) throws PetNoteException {
+        if(refreshToken != null){
+            String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+            authService.deleteAccount(userId);
+            //refreshTokenService.invalidate(userId, deviceId);
+        }
+
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 //TODO 운영 시 secure -> true

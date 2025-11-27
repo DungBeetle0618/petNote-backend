@@ -55,6 +55,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public void deleteAccount(String userId) throws PetNoteException {
+
+    }
+
     private boolean signupValidationCheck(SignupDTO dto) throws PetNoteException {
         String emailRegex = "\\S+@\\S+\\.\\S+";
         String phoneRegex = "^01[0-9]{8,9}$";

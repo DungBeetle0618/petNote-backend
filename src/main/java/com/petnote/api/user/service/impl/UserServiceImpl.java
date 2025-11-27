@@ -41,6 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateLoginDt(String userId) {
+        userRepository.updateLoginDt(userId);
+    }
+
+    @Override
     public int updateTempPasswordByUserIdAndEmail(String userId, String email, String password) {
         return userRepository.updateTempPasswordByUserIdAndEmail(userId, email, password);
     }

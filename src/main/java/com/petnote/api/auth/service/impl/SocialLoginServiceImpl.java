@@ -5,6 +5,7 @@ import com.petnote.api.auth.dto.LoginDTO;
 import com.petnote.api.auth.dto.NaverUserResponse;
 import com.petnote.api.auth.service.SocialLoginService;
 import com.petnote.api.user.entity.UserEntity;
+import com.petnote.api.user.repository.UserRepository;
 import com.petnote.api.user.service.UserService;
 import com.petnote.global.exception.PetNoteException;
 import com.petnote.global.utill.CommonUtil;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class SocialLoginServiceImpl implements SocialLoginService {
     private final WebClient.Builder webClientBuilder;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     public LoginDTO kakaoLogin(String accessToken) throws Exception {
@@ -66,6 +68,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
         Optional<UserEntity> serverUser = userService.getUserByUserId(user.getUserId());
         // kakao id로 등록된 유저 있다면 로그인 처리
         if(serverUser.isPresent()) {
+            userRepository.updateLoginDt(serverUser.get().getUserId());
             return LoginDTO.builder()
                         .userId(serverUser.get().getUserId())
                         .nickName(serverUser.get().getNickname())
@@ -73,6 +76,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
 
         // 없으면 가입 처리
         }else{
+            user.setSnsType("KAKAO");
             if(user.getNickname() == null) user.setNickname(CommonUtil.randomUpper6());
 
             Optional<UserEntity> nickNameCheck = userService.getUserByNickname(user.getNickname());
@@ -121,6 +125,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
         Optional<UserEntity> serverUser = userService.getUserByUserId(user.getUserId());
         // kakao id로 등록된 유저 있다면 로그인 처리
         if(serverUser.isPresent()) {
+            userRepository.updateLoginDt(serverUser.get().getUserId());
             return LoginDTO.builder()
                         .userId(serverUser.get().getUserId())
                         .nickName(serverUser.get().getNickname())
@@ -128,6 +133,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
 
         // 없으면 가입 처리
         }else{
+            user.setSnsType("NAVER");
             if(user.getNickname() == null) user.setNickname(CommonUtil.randomUpper6());
 
             Optional<UserEntity> nickNameCheck = userService.getUserByNickname(user.getNickname());
