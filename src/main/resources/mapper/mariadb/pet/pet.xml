@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petnote.api.pet.mapper.PetMapper">
+
+    <select id="selectList" resultType="com.petnote.api.pet.dto.PetDTO" >
+        /* PetMapper.selectList 펫리스트 조회 */
+        SELECT pet_no
+            , pet_name
+            , birth
+            , birth_know_yn
+            , ROUND((TO_DAYS(NOW()) - (TO_DAYS(birth))) / 365) AS age
+            , gender
+            , neutrification_yn
+            , species_type
+            , c.kor_name AS species_name
+            , breed_type
+            , c2.kor_name AS breed_name
+            , breed
+            , remark
+            , body_length
+            , main_yn
+        FROM PN_PET p
+        LEFT OUTER JOIN PN_CODE c
+            ON c.code_group1 = 'BREED_TYPE'
+            AND c.code_group2 = 'SPECIES'
+            AND c.code = p.species_type
+        LEFT OUTER JOIN PN_CODE c2
+            ON c2.code_group1 = 'BREED_TYPE'
+            AND c2.code_group2 = p.species_type
+            AND c2.code = p.breed_type
+        WHERE user_id = #{userId}
+        ORDER BY FIELD(main_yn, 'Y'), p.insert_date
+    </select>
+
+    <insert id="insertPet" parameterType="com.petnote.api.pet.dto.PetDTO">
+        /* PetMapper.insertPet 펫 등록 */
+        INSERT INTO PN_PET
+        (
+              user_id
+            , pet_name
+            , birth
+            , birth_know_yn
+            , gender
+            , neutrification_yn
+            , species_type
+            , breed_type
+            , breed
+            , remark
+            , use_yn
+            , body_length
+            , main_yn
+            , insert_date
+            , update_date
+        )
+        VALUES
+        (
+              #{userId}
+            , #{petName}
+            , #{birth}
+            , #{birthKnowYn}
+            , #{gender}
+            , #{neutrificationYn}
+            , #{speciesType}
+            , #{breedType}
+            , #{breed}
+            , #{remark}
+            , 'Y'
+            , #{bodyLength}
+            , #{mainYn}
+            , now()
+            , now()
+        )
+    </insert>
+
+</mapper>
