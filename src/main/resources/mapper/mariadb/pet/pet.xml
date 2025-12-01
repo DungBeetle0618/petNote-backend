@@ -95,7 +95,7 @@
             , #{neutrificationYn}
             , #{speciesType}
             , #{breedType}
-            , NVL(#{breed}, (SELECT kor_name FROM PN_CODE WHERE code_group1 = 'BREED_TYPE' AND code_group2 = #{speciesType} AND code = #{breedType}))
+            , IFNULL(#{breed}, (SELECT kor_name FROM PN_CODE WHERE code_group1 = 'BREED_TYPE' AND code_group2 = #{speciesType} AND code = #{breedType}))
             , #{remark}
             , 'Y'
             , #{bodyLength}
