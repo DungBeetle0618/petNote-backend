@@ -27,4 +27,5 @@ public class PetDTO extends BaseDTO {
     private String useYn;
     private String bodyLength;
     private String mainYn;
+    private String petInfo;
 }

@@ -5,21 +5,15 @@
 
     <select id="selectList" resultType="com.petnote.api.pet.dto.PetDTO" >
         /* PetMapper.selectList 펫리스트 조회 */
-        SELECT pet_no
-            , pet_name
-            , birth
-            , birth_know_yn
-            , ROUND((TO_DAYS(NOW()) - (TO_DAYS(birth))) / 365) AS age
-            , gender
-            , neutrification_yn
-            , species_type
+        SELECT p.pet_no
+            , p.pet_name
+            , p.gender
+            , p.species_type
             , c.kor_name AS species_name
-            , breed_type
+            , p.breed_type
             , c2.kor_name AS breed_name
-            , breed
-            , remark
-            , body_length
-            , main_yn
+            , p.breed
+            , img.file_path AS profile_img
         FROM PN_PET p
         LEFT OUTER JOIN PN_CODE c
             ON c.code_group1 = 'BREED_TYPE'
@@ -29,8 +23,45 @@
             ON c2.code_group1 = 'BREED_TYPE'
             AND c2.code_group2 = p.species_type
             AND c2.code = p.breed_type
-        WHERE user_id = #{userId}
-        ORDER BY FIELD(main_yn, 'Y'), p.insert_date
+        LEFT OUTER JOIN PN_PET_IMG img
+            ON img.pet_no = p.pet_no
+            AND img.main_yn = 'Y'
+        WHERE p.user_id = #{userId}
+        ORDER BY FIELD(p.main_yn, 'Y'), p.insert_date
+    </select>
+
+    <select id="selectPet" resultType="com.petnote.api.pet.dto.PetDTO" >
+        /* PetMapper.selectPet 펫정보 조회 */
+        SELECT p.pet_no
+             , p.pet_name
+             , p.birth
+             , p.birth_know_yn
+             , ROUND((TO_DAYS(NOW()) - (TO_DAYS(birth))) / 365) AS age
+             , p.gender
+             , p.neutrification_yn
+             , p.species_type
+             , c.kor_name AS species_name
+             , p.breed_type
+             , c2.kor_name AS breed_name
+             , p.breed
+             , p.remark
+             , p.body_length
+             , p.main_yn
+             , img.file_path AS profile_img
+             , p.pet_info
+        FROM PN_PET p
+        LEFT OUTER JOIN PN_CODE c
+            ON c.code_group1 = 'BREED_TYPE'
+            AND c.code_group2 = 'SPECIES'
+            AND c.code = p.species_type
+        LEFT OUTER JOIN PN_CODE c2
+            ON c2.code_group1 = 'BREED_TYPE'
+            AND c2.code_group2 = p.species_type
+            AND c2.code = p.breed_type
+        LEFT OUTER JOIN PN_PET_IMG img
+            ON img.pet_no = p.pet_no
+            AND img.main_yn = 'Y'
+        WHERE p.user_id = #{userId} AND p.pet_no = #{petNo}
     </select>
 
     <insert id="insertPet" parameterType="com.petnote.api.pet.dto.PetDTO">
@@ -50,6 +81,7 @@
             , use_yn
             , body_length
             , main_yn
+            , pet_info
             , insert_date
             , update_date
         )
@@ -63,11 +95,12 @@
             , #{neutrificationYn}
             , #{speciesType}
             , #{breedType}
-            , #{breed}
+            , NVL(#{breed}, (SELECT kor_name FROM PN_CODE WHERE code_group1 = 'BREED_TYPE' AND code_group2 = #{speciesType} AND code = #{breedType}))
             , #{remark}
             , 'Y'
             , #{bodyLength}
             , #{mainYn}
+            , #{petInfo}
             , now()
             , now()
         )

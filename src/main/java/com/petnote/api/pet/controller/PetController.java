@@ -54,4 +54,20 @@ public class PetController {
         return resultMap;
     }
 
+    /**
+     * 펫 상세 조회
+     * @param petDTO
+     * @return
+     */
+    @GetMapping("/selectForAxios")
+    public Map<String, Object> selectForAxios(PetDTO petDTO) {
+        String userId = "aaaa";
+        Map<String, Object> resultMap = new HashMap<>();
+        petDTO.setUserId(userId);
+
+        resultMap.put("result", "SUCCESS");
+        resultMap.put("data", petService.selectPet(petDTO));
+        return resultMap;
+    }
+
 }
