@@ -87,4 +87,27 @@ public class PetController {
         return resultMap;
     }
 
+    /**
+     * 펫정보 수정
+     * @param refreshToken
+     * @param petDTO
+     * @return
+     */
+    @PostMapping("/updateForAxios")
+    public Map<String, Object> updateForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+                                              @RequestBody PetDTO petDTO) {
+        String userId = "";
+        if(refreshToken != null){
+            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+        }
+        petDTO.setUserId(userId);
+
+        petService.updatePet(petDTO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", "SUCCESS");
+
+        return resultMap;
+    }
+
 }

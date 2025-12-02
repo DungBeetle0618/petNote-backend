@@ -41,4 +41,13 @@ public class PetServiceImpl implements PetService {
     public Object selectPet(PetDTO petDTO) {
         return petMapper.selectPet(petDTO);
     }
+
+    /**
+     * 펫정보 수정
+     * @param petDTO
+     */
+    @Override
+    public void updatePet(PetDTO petDTO) {
+        petMapper.updatePet(petDTO);
+    }
 }

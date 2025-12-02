@@ -10,4 +10,6 @@ public interface PetService {
     void insertPet(PetDTO petDTO);
 
     Object selectPet(PetDTO petDTO);
+
+    void updatePet(PetDTO petDTO);
 }

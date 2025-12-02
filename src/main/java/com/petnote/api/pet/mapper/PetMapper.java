@@ -13,4 +13,6 @@ public interface PetMapper {
     void insertPet(PetDTO petDTO);
 
     Object selectPet(PetDTO petDTO);
+
+    void updatePet(PetDTO petDTO);
 }

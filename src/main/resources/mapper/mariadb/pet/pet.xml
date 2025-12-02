@@ -115,4 +115,22 @@
         )
     </insert>
 
+    <update id="updatePet" parameterType="com.petnote.api.pet.dto.PetDTO">
+        /* PetMapper.updatePet 펫정보 수정 */
+        UPDATE PN_PET SET
+            pet_name = #{petName}
+            , birth = #{birth}
+            , birth_know_yn = #{birthKnowYn}
+            , gender = #{gender}
+            , neutrification_yn = #{neutrificationYn}
+            , species_type = #{speciesType}
+            , breed_type = #{breedType}
+            , breed = (IFNULL(#{breed}, (SELECT kor_name FROM PN_CODE WHERE code_group1 = 'BREED_TYPE' AND code_group2 = #{speciesType} AND code = #{breedType})))
+            , remark = #{remark}
+            , body_length = #{bodyLength}
+            , pet_info = #{petInfo}
+            , update_date = NOW()
+        WHERE user_id = #{userId} AND pet_no = #{petNo}
+    </update>
+
 </mapper>
