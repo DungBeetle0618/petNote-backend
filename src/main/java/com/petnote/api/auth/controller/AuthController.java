@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -84,7 +85,7 @@ public class AuthController {
                 //TODO 운영 시 secure -> true
                 .httpOnly(true).secure(false)
                 .sameSite("Lax")
-                .path("/auth")
+                .path("/")
                 .maxAge(Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY))
                 .build();
 
@@ -129,7 +130,7 @@ public class AuthController {
                 //TODO 운영 시 secure -> true
                 .secure(false)
                 .sameSite("Lax")
-                .path("/auth")
+                .path("/")
                 .maxAge(0)
                 .build();
         return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
@@ -150,7 +151,7 @@ public class AuthController {
                 //TODO 운영 시 secure -> true
                 .secure(false)
                 .sameSite("Lax")
-                .path("/auth")
+                .path("/")
                 .maxAge(0)
                 .build();
         return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();

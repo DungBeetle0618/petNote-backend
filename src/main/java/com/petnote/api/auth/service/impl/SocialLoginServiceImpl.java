@@ -48,6 +48,9 @@ public class SocialLoginServiceImpl implements SocialLoginService {
         KakaoUserResponse.KakaoAccount kakaoAccount = userInfo.getKakaoAccount();
         KakaoUserResponse.Properties properties = userInfo.getProperties();
         KakaoUserResponse.KakaoAccount.Profile profile = kakaoAccount.getProfile();
+        if(profile == null) profile = new KakaoUserResponse.KakaoAccount.Profile();
+        if(properties == null) properties = new KakaoUserResponse.Properties();
+
         UserEntity user = UserEntity.builder()
                 .userId(userInfo.getId())
                 .email(kakaoAccount.getEmail())
