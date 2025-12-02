@@ -27,7 +27,7 @@
             ON img.pet_no = p.pet_no
             AND img.main_yn = 'Y'
         WHERE p.user_id = #{userId}
-        ORDER BY FIELD(p.main_yn, 'Y'), p.insert_date
+        ORDER BY FIELD(p.main_yn, 'Y') DESC, p.insert_date
     </select>
 
     <select id="selectPet" resultType="com.petnote.api.pet.dto.PetDTO" >
@@ -99,7 +99,16 @@
             , #{remark}
             , 'Y'
             , #{bodyLength}
-            , #{mainYn}
+            , (
+                  SELECT main_yn
+                  FROM (
+                           SELECT
+                               CASE WHEN COUNT(pet_no) > 0 THEN 'N' ELSE 'Y' END AS main_yn
+                           FROM PN_PET
+                           WHERE use_yn = 'Y'
+                             AND user_id = #{userId}
+                       ) AS t
+                  )
             , #{petInfo}
             , now()
             , now()

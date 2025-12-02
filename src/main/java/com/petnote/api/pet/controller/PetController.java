@@ -29,21 +29,10 @@ public class PetController {
      * @return
      */
     @GetMapping("/listForAxios")
-    public Map<String, Object> listForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                System.out.println(cookie.getName() + " = " + cookie.getValue());
-            }
-        }
-
-
-        String userId = "aaaa";
+    public Map<String, Object> listForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
+        String userId = "";
         if(refreshToken != null){
              userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-            System.out.println("======> " +  userId);
-        } else {
-            System.out.println("======>리프레시 없음");
         }
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -61,11 +50,14 @@ public class PetController {
      * @return
      */
     @PostMapping("/insertForAxios")
-    public Map<String, Object> insertForAxios(@RequestBody PetDTO petDTO) {
-        String userId = "aaaa";
+    public Map<String, Object> insertForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+                                              @RequestBody PetDTO petDTO) {
+        String userId = "";
+        if(refreshToken != null){
+            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+        }
         petDTO.setUserId(userId);
 
-        //TODO: 첫 동물이면 자동으로 대표 설정.
         petService.insertPet(petDTO);
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -80,8 +72,13 @@ public class PetController {
      * @return
      */
     @GetMapping("/selectForAxios")
-    public Map<String, Object> selectForAxios(PetDTO petDTO) {
-        String userId = "aaaa";
+    public Map<String, Object> selectForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+                                              PetDTO petDTO) {
+        String userId = "";
+        if(refreshToken != null){
+            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+        }
+
         Map<String, Object> resultMap = new HashMap<>();
         petDTO.setUserId(userId);
 

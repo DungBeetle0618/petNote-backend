@@ -28,4 +28,15 @@ public class PetDTO extends BaseDTO {
     private String bodyLength;
     private String mainYn;
     private String petInfo;
+
+    public void setBirth(String birth) {
+        this.birth = isEmptyToNull(birth);
+    }
+    public void setBreed(String breed) {
+        this.breed = isEmptyToNull(breed);
+    }
+
+    private String isEmptyToNull(String value) {
+        return (value == null || value.trim().isEmpty()) ? null : value;
+    }
 }
