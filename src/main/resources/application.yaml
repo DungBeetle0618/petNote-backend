@@ -18,7 +18,10 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0
-
+  mvc:
+    view:
+      prefix: "/WEB-INF/view/"
+      suffix: ".jsp"
   data:
     redis:
       host: localhost
