@@ -70,9 +70,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenRes> login(@RequestBody LoginReq req) {
-        log.info("login req: {}", req);
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(req.getPassword(), req.getDeviceId()));
+            new UsernamePasswordAuthenticationToken(req.getUserId(), req.getPassword()));
         User user = (User) authentication.getPrincipal();
         String userId = user.getUsername();
         userService.updateLoginDt(userId);
@@ -121,8 +120,6 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken,
                                        @RequestParam(defaultValue = "device") String deviceId) {
-                log.debug("dete" + refreshToken);
-
         if(refreshToken != null){
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
             //refreshTokenService.invalidate(userId, deviceId);
