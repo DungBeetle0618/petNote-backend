@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginDTO login(LoginDTO dto) {
         Optional<UserEntity> user = userRepository.findById(dto.getUserId());
-        if(user.isEmpty()){
+        if(!user.isPresent()){
             return null;
         }
 

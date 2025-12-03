@@ -1,6 +1,8 @@
 package com.petnote.api.auth.controller;
 
+import com.petnote.api.auth.dto.LoginReq;
 import com.petnote.api.auth.dto.SignupDTO;
+import com.petnote.api.auth.dto.TokenRes;
 import com.petnote.api.auth.jwt.JwtProvider;
 import com.petnote.api.auth.refresh.RefreshTokenService;
 import com.petnote.api.auth.service.AuthService;
@@ -12,13 +14,13 @@ import com.petnote.global.config.VerifyCodeService;
 import com.petnote.global.exception.PetNoteException;
 import com.petnote.global.utill.MailManager;
 import com.petnote.global.utill.TempPasswordGenerator;
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotBlank;
+import javax.transaction.Transactional;
+
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +32,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -54,9 +57,6 @@ public class AuthController {
     @Value("${app.jwt.refresh-exp-days}")
     private int REFRESH_TOKEN_EXPIRE_DAY;
 
-    public record LoginReq(@NotBlank String userId, @NotBlank String password, String deviceId) {}
-    public record TokenRes(String accessToken) {}
-
     @PostMapping("/signup")
     public ResponseEntity<SignupDTO> signup(@RequestBody SignupDTO dto) throws PetNoteException {
         log.info("signup dto: {}", dto);
@@ -72,11 +72,13 @@ public class AuthController {
     public ResponseEntity<TokenRes> login(@RequestBody LoginReq req) {
         log.info("login req: {}", req);
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(req.userId(), req.password()));
-        var user = (User) authentication.getPrincipal();
+            new UsernamePasswordAuthenticationToken(req.getPassword(), req.getDeviceId()));
+        User user = (User) authentication.getPrincipal();
         String userId = user.getUsername();
         userService.updateLoginDt(userId);
-        String access = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "USER");
+        String access = jwtProvider.generateAccessToken(userId, claims);
         String refresh = jwtProvider.generateRefreshToken(userId);
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
@@ -100,14 +102,15 @@ public class AuthController {
         if(refreshToken == null || refreshToken.isEmpty()){
             return ResponseEntity.status(401).build();
         }
-        var claims = jwtProvider.parseToken(refreshToken).getBody();
+        Claims claims = jwtProvider.parseToken(refreshToken).getBody();
         String userId = claims.getSubject();
 
         /*if(!refreshTokenService.validate(userId, deviceId, refreshToken)){
             return ResponseEntity.status(401).build();
         }*/
-
-        String newAccess = jwtProvider.generateAccessToken(userId, Map.of("role", "USER"));
+        Map<String, Object> userRole = new HashMap<>();
+        claims.put("role", "USER");
+        String newAccess = jwtProvider.generateAccessToken(userId, userRole);
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, newAccess, newRefresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
@@ -178,7 +181,7 @@ public class AuthController {
     @GetMapping("/find-id/request")
     public ResponseEntity<ResponseDTO> sendFindIdCode(@RequestParam String email) throws Exception {
         Optional<UserEntity> user = userService.getUserByEmail(email);
-        if(user.isEmpty()){
+        if(!user.isPresent()){
             throw PetNoteException.builder().status(400).message("등록된 계정이 없습니다.").build();
         }
         String code = codeSvc.issueCode(VerifyCodeService.Purpose.FIND_ID, email, null);
@@ -197,7 +200,7 @@ public class AuthController {
                     .status(false)
                     .build());
         Optional<UserEntity> user = userService.getUserByEmail(email);
-        if(user.isEmpty()){
+        if(!user.isPresent()){
             return ResponseEntity.ok(ResponseDTO
                     .builder()
                     .status(false)
@@ -215,7 +218,7 @@ public class AuthController {
         String userId = body.get("userId");
         String email = body.get("email");
         Optional<UserEntity> user = userService.getUserByUserIdAndEmail(userId, email);
-        if(user.isEmpty()){
+        if(!user.isPresent()){
             throw PetNoteException.builder().status(400).message("등록된 계정이 없습니다.").build();
         }
         String code = codeSvc.issueCode(VerifyCodeService.Purpose.FIND_ID, email, userId);

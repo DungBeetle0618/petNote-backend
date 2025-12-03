@@ -1,6 +1,5 @@
 package com.petnote.global.config;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -16,22 +15,24 @@ public class VerifyCodeService {
 
     public enum Purpose { FIND_ID, RESET_PW }
 
-    private String codeKey(Purpose p, String email, @Nullable String userId) {
+    private String codeKey(Purpose p, String email, String userId) {
         // userId는 RESET_PW에서만 사용
-        return switch (p) {
-            case FIND_ID -> "code:fid:" + email;
-            case RESET_PW -> "code:rpw:" + userId + ":" + email;
-        };
+        if(p == Purpose.FIND_ID) {
+            return "code:fid:" + email;
+        }else if(p == Purpose.RESET_PW) {
+            return "code:rpw:" + userId + ":" + email;
+        }
+        return null;
     }
 
-    public String issueCode(Purpose purpose, String email, @Nullable String userId) {
+    public String issueCode(Purpose purpose, String email, String userId) {
         String code = String.format("%06d", ThreadLocalRandom.current().nextInt(0, 1_000_000));
         String key = codeKey(purpose, email, userId);
         redis.opsForValue().set(key, code, Duration.ofMinutes(props.getCodeTtlMin()));
         return code;
     }
 
-    public boolean verifyCode(Purpose purpose, String email, @Nullable String userId, String input) {
+    public boolean verifyCode(Purpose purpose, String email, String userId, String input) {
         String key = codeKey(purpose, email, userId);
         String saved = redis.opsForValue().get(key);
         if (saved == null) return false;            // 만료 or 없음

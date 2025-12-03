@@ -14,7 +14,7 @@ spring:
         show_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0

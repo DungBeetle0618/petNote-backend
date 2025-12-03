@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Log4j2
 public class CommunityDTO extends UploadDTO {
 

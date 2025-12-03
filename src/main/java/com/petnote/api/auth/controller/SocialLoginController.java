@@ -2,6 +2,7 @@ package com.petnote.api.auth.controller;
 
 
 import com.petnote.api.auth.dto.LoginDTO;
+import com.petnote.api.auth.dto.TokenRes;
 import com.petnote.api.auth.jwt.JwtProvider;
 import com.petnote.api.auth.refresh.RefreshTokenService;
 import com.petnote.api.auth.service.SocialLoginService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -33,10 +35,12 @@ public class SocialLoginController {
 
 
     @PostMapping("/kakao/login")
-    public ResponseEntity<AuthController.TokenRes> kakaoLogin(@RequestBody LoginDTO loginRequest) throws Exception {
+    public ResponseEntity<TokenRes> kakaoLogin(@RequestBody LoginDTO loginRequest) throws Exception {
         log.info("login accessT : {}", loginRequest.getAccessToken());
         LoginDTO loginDTO = socialLoginService.kakaoLogin(loginRequest.getAccessToken());
-        String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), Map.of("role", "USER"));
+        Map<String, Object> userRole = new HashMap<>();
+        userRole.put("role", "USER");
+        String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), userRole);
         String refresh = jwtProvider.generateRefreshToken(loginDTO.getUserId());
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
@@ -51,15 +55,17 @@ public class SocialLoginController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new AuthController.TokenRes(access));
+                .body(new TokenRes(access));
     }
 
     @PostMapping("/naver/login")
-    public ResponseEntity<AuthController.TokenRes> naverLogin(@RequestBody LoginDTO loginRequest) throws Exception {
+    public ResponseEntity<TokenRes> naverLogin(@RequestBody LoginDTO loginRequest) throws Exception {
         log.info("login accessT : {}", loginRequest.getAccessToken());
 
         LoginDTO loginDTO = socialLoginService.naverLogin(loginRequest.getAccessToken());
-        String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), Map.of("role", "USER"));
+        Map<String, Object> userRole = new HashMap<>();
+        userRole.put("role", "USER");
+        String access = jwtProvider.generateAccessToken(loginDTO.getUserId(), userRole);
         String refresh = jwtProvider.generateRefreshToken(loginDTO.getUserId());
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
         //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
@@ -74,6 +80,6 @@ public class SocialLoginController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new AuthController.TokenRes(access));
+                .body(new TokenRes(access));
     }
 }

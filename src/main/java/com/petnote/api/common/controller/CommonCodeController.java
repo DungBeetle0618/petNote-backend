@@ -2,7 +2,7 @@ package com.petnote.api.common.controller;
 
 import com.petnote.api.common.dto.CommonCodeDTO;
 import com.petnote.api.common.service.CommonCodeService;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;

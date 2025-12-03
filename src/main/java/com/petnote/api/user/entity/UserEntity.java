@@ -1,14 +1,15 @@
 package com.petnote.api.user.entity;
 
 import com.petnote.api.auth.dto.LoginDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Size;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
+import javax.persistence.Column;
 import java.time.Instant;
 
 @Getter
