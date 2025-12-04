@@ -21,40 +21,46 @@ public class FileUploadManager {
     public FileInfoDTO upload(UploadType typePath, MultipartFile uploadFile, HttpServletRequest request) {
 
         String sp = File.separator;
-        String root_path = request.getServletContext().getRealPath("/WEB-INF");
 
-        System.out.println("root_path ===================> " + root_path);
+        String appRootPath = request.getServletContext().getRealPath("/");
+        System.out.println("appRootPath ===================> " + appRootPath);
 
-        File uploadDir = new File(root_path + sp + typePath.getPath());
+        File appRootDir = new File(appRootPath);
+
+        File webappsDir = appRootDir.getParentFile();
+
+        File uploadDir = new File(webappsDir, "resources" + sp + typePath.getPath());
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
 
-        FileInfoDTO fileInfoVO = new FileInfoDTO();
         String file_name = System.currentTimeMillis() + "_" + uploadFile.getOriginalFilename();
-        String file_path = root_path + sp + typePath.getPath() + sp + file_name;
 
-        System.out.println("file_path ===================> " + file_path);
+        File destFile = new File(uploadDir, file_name);
+        System.out.println("destFile ===================> " + destFile.getAbsolutePath());
 
         try {
-            uploadFile.transferTo(new File(file_path));
-        }catch(Exception e) {
+            uploadFile.transferTo(destFile);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
+        String webPath = "/resources/" + typePath.getPath() + "/" + file_name;
+
+        FileInfoDTO fileInfoDTO = new FileInfoDTO();
+
         //파일주소
-        fileInfoVO.setFilePath(file_path);
+        fileInfoDTO.setFilePath(webPath);
         //원본파일명
-        fileInfoVO.setOriginFileName(uploadFile.getOriginalFilename());
+        fileInfoDTO.setOriginFileName(uploadFile.getOriginalFilename());
         //서버저장이름
-        fileInfoVO.setFileName(file_name);
+        fileInfoDTO.setFileName(file_name);
         //파일사이즈
-        fileInfoVO.setFileSize(uploadFile.getSize());
+        fileInfoDTO.setFileSize(uploadFile.getSize());
 
-
-        return fileInfoVO;
-
+        return fileInfoDTO;
     }
+
 
 
 
