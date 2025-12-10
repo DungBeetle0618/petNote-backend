@@ -4,6 +4,9 @@ import com.petnote.api.common.dto.BaseDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +31,9 @@ public class PetDTO extends BaseDTO {
     private String bodyLength;
     private String mainYn;
     private String petInfo;
+
+    private MultipartFile uploadFile;
+    private List<MultipartFile> uploadFiles;
 
     public void setBirth(String birth) {
         this.birth = isEmptyToNull(birth);

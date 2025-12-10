@@ -1,5 +1,6 @@
 package com.petnote.api.pet.service;
 
+import com.petnote.api.common.upload.FileInfoDTO;
 import com.petnote.api.pet.dto.PetDTO;
 
 import java.util.List;
@@ -12,4 +13,8 @@ public interface PetService {
     Object selectPet(PetDTO petDTO);
 
     void updatePet(PetDTO petDTO);
+
+    void insertImage(FileInfoDTO fileInfoDTO, int petNo, String mainYn);
+
+    void deleteImage(int petNo);
 }

@@ -1,6 +1,9 @@
 package com.petnote.api.pet.controller;
 
 import com.petnote.api.auth.jwt.JwtProvider;
+import com.petnote.api.common.upload.FileInfoDTO;
+import com.petnote.api.common.upload.FileUploadManager;
+import com.petnote.api.common.upload.UploadType;
 import com.petnote.api.pet.dto.PetDTO;
 import com.petnote.api.pet.service.PetService;
 import javax.servlet.http.Cookie;
@@ -11,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +27,7 @@ import java.util.Map;
 public class PetController {
     private final PetService petService;
     private final JwtProvider jwtProvider;
+    private final FileUploadManager fileUploadManager;
 
     /**
      * 펫리스트 조회
@@ -51,14 +56,23 @@ public class PetController {
      */
     @PostMapping("/insertForAxios")
     public Map<String, Object> insertForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
-                                              @RequestBody PetDTO petDTO) {
+                                              @ModelAttribute PetDTO petDTO, HttpServletRequest request) {
         String userId = "";
         if(refreshToken != null){
             userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
         }
         petDTO.setUserId(userId);
-
+        //펫 정보 등록
         petService.insertPet(petDTO);
+        int petNo = petDTO.getPetNo(); //인서트 후 펫 고유번호
+        log.info("insert pet no==> " + petNo);
+
+        if(petDTO.getUploadFile() != null){
+            FileInfoDTO fileInfoDTO = fileUploadManager.upload(UploadType.ANIMAL, petDTO.getUploadFile(), request);
+            log.info("fileInfoVO=={}", fileInfoDTO);
+
+            petService.insertImage(fileInfoDTO, petNo, "Y");
+        }
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", "SUCCESS");
@@ -95,7 +109,7 @@ public class PetController {
      */
     @PostMapping("/updateForAxios")
     public Map<String, Object> updateForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
-                                              @RequestBody PetDTO petDTO) {
+                                              @ModelAttribute PetDTO petDTO, HttpServletRequest request) {
         String userId = "";
         if(refreshToken != null){
             userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
@@ -103,6 +117,14 @@ public class PetController {
         petDTO.setUserId(userId);
 
         petService.updatePet(petDTO);
+
+        if(petDTO.getUploadFile() != null){
+            FileInfoDTO fileInfoDTO = fileUploadManager.upload(UploadType.ANIMAL, petDTO.getUploadFile(), request);
+            log.info("fileInfoVO=={}", fileInfoDTO);
+
+            petService.deleteImage(petDTO.getPetNo());
+            petService.insertImage(fileInfoDTO, petDTO.getPetNo(), "Y");
+        }
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", "SUCCESS");

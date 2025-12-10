@@ -66,6 +66,10 @@
 
     <insert id="insertPet" parameterType="com.petnote.api.pet.dto.PetDTO">
         /* PetMapper.insertPet 펫 등록 */
+        <selectKey keyProperty="petNo" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
         INSERT INTO PN_PET
         (
               user_id
@@ -132,5 +136,35 @@
             , update_date = NOW()
         WHERE user_id = #{userId} AND pet_no = #{petNo}
     </update>
+
+    <insert id="insertImage" parameterType="java.util.Map">
+        /* PetMapper.insertImage 이미지 저장 */
+        INSERT INTO PN_PET_IMG (
+            pet_no
+            , main_yn
+            , file_path
+            , original_file_name
+            , file_name
+            , file_size
+            , insert_date
+            , update_date
+        )
+        VALUES (
+            #{petNo}
+            , #{mainYn}
+            , #{file.filePath}
+            , #{file.originFileName}
+            , #{file.fileName}
+            , #{file.fileSize}
+            , NOW()
+            , NOW()
+        )
+    </insert>
+
+    <delete id="deleteImage" parameterType="int">
+        /* PetMapper.deleteImage 기존 대표이미지 삭제 */
+        DELETE FROM PN_PET_IMG
+        WHERE pet_no = #{petNo} AND main_yn = 'Y'
+    </delete>
 
 </mapper>
