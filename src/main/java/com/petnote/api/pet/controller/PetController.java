@@ -132,4 +132,28 @@ public class PetController {
         return resultMap;
     }
 
+    /**
+     * 펫 삭제
+     * @param refreshToken
+     * @param petDTO
+     * @return
+     */
+    @GetMapping("/deleteForAxios")
+    public Map<String, Object> deleteForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+                                              PetDTO petDTO) {
+        String userId = "";
+        if(refreshToken != null){
+            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        petDTO.setUserId(userId);
+
+        petService.deletePet(petDTO);
+
+        resultMap.put("result", "SUCCESS");
+        return resultMap;
+
+    }
+
 }

@@ -77,4 +77,13 @@ public class PetServiceImpl implements PetService {
     public void deleteImage(int petNo) {
         petMapper.deleteImage(petNo);
     }
+
+    /**
+     * 펫 삭제
+     * @param petDTO
+     */
+    @Override
+    public void deletePet(PetDTO petDTO) {
+        petMapper.deletePet(petDTO);
+    }
 }

@@ -27,6 +27,7 @@
             ON img.pet_no = p.pet_no
             AND img.main_yn = 'Y'
         WHERE p.user_id = #{userId}
+            AND p.use_yn = 'Y'
         ORDER BY FIELD(p.main_yn, 'Y') DESC, p.insert_date
     </select>
 
@@ -166,5 +167,12 @@
         DELETE FROM PN_PET_IMG
         WHERE pet_no = #{petNo} AND main_yn = 'Y'
     </delete>
+
+    <update id="deletePet" parameterType="com.petnote.api.pet.dto.PetDTO">
+        /* PetMapper.deletePet 펫 삭제 */
+        UPDATE PN_PET SET use_yn = 'N'
+        WHERE user_id = #{userId}
+         AND pet_no = #{petNo}
+    </update>
 
 </mapper>

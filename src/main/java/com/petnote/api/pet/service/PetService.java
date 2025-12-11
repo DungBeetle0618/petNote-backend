@@ -17,4 +17,6 @@ public interface PetService {
     void insertImage(FileInfoDTO fileInfoDTO, int petNo, String mainYn);
 
     void deleteImage(int petNo);
+
+    void deletePet(PetDTO petDTO);
 }

@@ -20,4 +20,6 @@ public interface PetMapper {
     void insertImage(Map<String, Object> param);
 
     void deleteImage(int petNo);
+
+    void deletePet(PetDTO petDTO);
 }
