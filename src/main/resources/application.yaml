@@ -55,7 +55,7 @@ decorator:
 app:
   jwt:
     issuer: petNote
-    access-exp-minutes: 15
+    access-exp-minutes: 1
     refresh-exp-days: 14
     secret: "aZbK93jf39Jf02FslkFja3021hfjs93Kd8sfl3kfj9w9s2dkj3"
 auth:

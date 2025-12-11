@@ -60,6 +60,16 @@ public class AuthServiceImpl implements AuthService {
         authRepository.deleteAccount(userId);
     }
 
+    @Override
+    public void setRefreshToken(String userId, String refreshToken) {
+        authRepository.setRefreshToken(userId, refreshToken);
+    }
+
+    @Override
+    public String getRefreshToken(String userId) {
+        return authRepository.getRefreshToken(userId);
+    }
+
     private boolean signupValidationCheck(SignupDTO dto) throws PetNoteException {
         String emailRegex = "\\S+@\\S+\\.\\S+";
         String phoneRegex = "^01[0-9]{8,9}$";

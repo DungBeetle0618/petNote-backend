@@ -44,7 +44,7 @@ public class JwtProvider {
                 .setSubject(subject)
                 .setIssuer(issuer)
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(refreshExpDays, ChronoUnit.DAYS)))
+                .setExpiration(Date.from(now.plus(refreshExpDays, ChronoUnit.MINUTES)))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }

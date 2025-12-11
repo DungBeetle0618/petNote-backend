@@ -32,6 +32,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -79,8 +80,7 @@ public class AuthController {
         claims.put("role", "USER");
         String access = jwtProvider.generateAccessToken(userId, claims);
         String refresh = jwtProvider.generateRefreshToken(userId);
-        //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
-        //refreshTokenService.save(userId, req.deviceId == null ? "device" : req.deviceId, refresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
+        refreshTokenService.save(userId, refresh);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refresh)
                 //TODO 운영 시 secure -> true
@@ -103,15 +103,18 @@ public class AuthController {
         }
         Claims claims = jwtProvider.parseToken(refreshToken).getBody();
         String userId = claims.getSubject();
+        log.info("expiration = {}", claims.getExpiration());
+        Date expiration = claims.getExpiration();
+        log.info("expiration = {}", expiration);
+        log.info("REFRESH_TOKEN_EXPIRE_DAY = {}", REFRESH_TOKEN_EXPIRE_DAY);
 
-        /*if(!refreshTokenService.validate(userId, deviceId, refreshToken)){
+        if(!refreshTokenService.validate(userId, refreshToken)){
             return ResponseEntity.status(401).build();
-        }*/
+        }
         Map<String, Object> userRole = new HashMap<>();
         claims.put("role", "USER");
         String newAccess = jwtProvider.generateAccessToken(userId, userRole);
         //TODO 운영 전환 시 redis 환경 설정 후 주석 풀기, yaml redis 주석 해제
-        //refreshTokenService.save(userId, newAccess, newRefresh, Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAY));
 
         return ResponseEntity.ok()
                 .body(new TokenRes(newAccess));
@@ -122,7 +125,7 @@ public class AuthController {
                                        @RequestParam(defaultValue = "device") String deviceId) {
         if(refreshToken != null){
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-            //refreshTokenService.invalidate(userId, deviceId);
+            refreshTokenService.invalidate(userId);
         }
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
@@ -141,9 +144,8 @@ public class AuthController {
         log.debug("dete" + refreshToken);
         if(refreshToken != null){
             String userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-            log.debug("dddddd = " + userId);
             authService.deleteAccount(userId);
-            //refreshTokenService.invalidate(userId, deviceId);
+            refreshTokenService.invalidate(userId);
         }
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")

@@ -1,5 +1,6 @@
 package com.petnote.api.auth.refresh;
 
+import com.petnote.api.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,7 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
-    private final StringRedisTemplate redis;
-    private static final String PREFIX = "refresh:";
+    private final AuthService authService;
 
     private String sha256(String s){
         try {
@@ -26,16 +26,16 @@ public class RefreshTokenService {
         }
     }
 
-    public void save(String userId, String deviceId, String refreshToken, Duration duration){
-        redis.opsForValue().set(PREFIX + userId + ":" + deviceId, sha256(refreshToken), duration);
+    public void save(String userId, String refreshToken){
+        authService.setRefreshToken(userId, sha256(refreshToken));
     }
 
-    public boolean validate(String userId, String deviceId, String provided){
-        String saved = redis.opsForValue().get(PREFIX + userId + ":" + deviceId);
+    public boolean validate(String userId, String provided){
+        String saved = authService.getRefreshToken(userId);
         return saved != null && saved.equals(sha256(provided));
     }
 
-    public void invalidate(String userId, String deviceId){
-        redis.delete(PREFIX + userId + ":" + deviceId);
+    public void invalidate(String userId){
+        authService.setRefreshToken(userId, null);
     }
 }
