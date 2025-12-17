@@ -2,6 +2,7 @@ package com.petnote.api.auth.refresh;
 
 import com.petnote.api.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +10,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
     private final AuthService authService;
 
-    private String sha256(String s){
+    public String sha256(String s){
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] digest = md.digest(s.getBytes(StandardCharsets.UTF_8));

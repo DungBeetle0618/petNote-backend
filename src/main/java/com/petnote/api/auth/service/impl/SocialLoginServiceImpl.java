@@ -43,8 +43,6 @@ public class SocialLoginServiceImpl implements SocialLoginService {
             throw PetNoteException.builder().message("잠시 후 다시 시도해 주세요.").build();
         }
 
-        log.info("kakao userInfo = {}", userInfo);
-
         KakaoUserResponse.KakaoAccount kakaoAccount = userInfo.getKakaoAccount();
         KakaoUserResponse.Properties properties = userInfo.getProperties();
         KakaoUserResponse.KakaoAccount.Profile profile = kakaoAccount.getProfile();
@@ -114,8 +112,6 @@ public class SocialLoginServiceImpl implements SocialLoginService {
         if(userInfo == null) {
             throw PetNoteException.builder().message("잠시 후 다시 시도해 주세요.").build();
         }
-
-        log.info("NaverUserResponse userInfo = {}", userInfo);
 
         NaverUserResponse.response response = userInfo.getResponse();
         UserEntity user = UserEntity.builder()

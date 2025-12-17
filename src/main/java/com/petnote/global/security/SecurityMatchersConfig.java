@@ -11,12 +11,7 @@ public class SecurityMatchersConfig {
     @Bean
     public RequestMatcher permitAllMatcher() {
         return new OrRequestMatcher(
-            new AntPathRequestMatcher("/"),
-            new AntPathRequestMatcher("/auth/**"),
-            new AntPathRequestMatcher("/oauth2/**"),
-            new AntPathRequestMatcher("/actuator/**"),
-            new AntPathRequestMatcher("/error"),
-            new AntPathRequestMatcher("/api/**")
+            new AntPathRequestMatcher("/auth/**")
         );
     }
 

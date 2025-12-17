@@ -36,7 +36,6 @@ public class SocialLoginController {
 
     @PostMapping("/kakao/login")
     public ResponseEntity<TokenRes> kakaoLogin(@RequestBody LoginDTO loginRequest) throws Exception {
-        log.info("login accessT : {}", loginRequest.getAccessToken());
         LoginDTO loginDTO = socialLoginService.kakaoLogin(loginRequest.getAccessToken());
         Map<String, Object> userRole = new HashMap<>();
         userRole.put("role", "USER");
@@ -60,8 +59,6 @@ public class SocialLoginController {
 
     @PostMapping("/naver/login")
     public ResponseEntity<TokenRes> naverLogin(@RequestBody LoginDTO loginRequest) throws Exception {
-        log.info("login accessT : {}", loginRequest.getAccessToken());
-
         LoginDTO loginDTO = socialLoginService.naverLogin(loginRequest.getAccessToken());
         Map<String, Object> userRole = new HashMap<>();
         userRole.put("role", "USER");

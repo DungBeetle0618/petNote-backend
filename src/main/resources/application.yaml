@@ -46,6 +46,7 @@ logging:
     org.mybatis.spring.SqlSessionFactoryBean: INFO
     jdbc.resultset: OFF
     com.p6spy: INFO
+    org.springframework.web: DEBUG
 decorator:
   datasource:
     p6spy:
@@ -55,7 +56,7 @@ decorator:
 app:
   jwt:
     issuer: petNote
-    access-exp-minutes: 1
+    access-exp-minutes: 30
     refresh-exp-days: 14
     secret: "aZbK93jf39Jf02FslkFja3021hfjs93Kd8sfl3kfj9w9s2dkj3"
 auth:
@@ -64,3 +65,7 @@ auth:
     final-token-ttl-min: 15
 server:
   port: 9090
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always

@@ -35,16 +35,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        log.info("====================jwtFiler 진입==========================");
-        log.info("====================requestURI : {}", request.getRequestURI());
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
                 Claims body = jwtProvider.parseToken(token).getBody();
-                log.info("====================parseToken==========================");
-                log.info("body = {}", body);
                 String username = body.getSubject();
-
                 UserDetails userDetail = customUserDetailService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetail, null, userDetail.getAuthorities());
@@ -52,7 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e){
-                log.info("======================catch=======================");
                 /*
                     유효하지 않으면 통과 -> 컨트롤러에서 403 처리
                  */
