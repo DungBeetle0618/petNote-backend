@@ -6,12 +6,12 @@ import com.petnote.api.common.upload.FileUploadManager;
 import com.petnote.api.common.upload.UploadType;
 import com.petnote.api.pet.dto.PetDTO;
 import com.petnote.api.pet.service.PetService;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,11 +34,8 @@ public class PetController {
      * @return
      */
     @GetMapping("/listForAxios")
-    public Map<String, Object> listForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
-        String userId = "";
-        if(refreshToken != null){
-             userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-        }
+    public Map<String, Object> listForAxios(@AuthenticationPrincipal User user) {
+        String userId = user.getUsername();
 
         Map<String, Object> resultMap = new HashMap<>();
         List<PetDTO> list = petService.selectList(userId);
@@ -55,13 +52,9 @@ public class PetController {
      * @return
      */
     @PostMapping("/insertForAxios")
-    public Map<String, Object> insertForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+    public Map<String, Object> insertForAxios(@AuthenticationPrincipal User user,
                                               @ModelAttribute PetDTO petDTO, HttpServletRequest request) {
-        String userId = "";
-        if(refreshToken != null){
-            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-        }
-        petDTO.setUserId(userId);
+        petDTO.setUserId(user.getUsername());
         //펫 정보 등록
         petService.insertPet(petDTO);
         int petNo = petDTO.getPetNo(); //인서트 후 펫 고유번호
@@ -86,15 +79,11 @@ public class PetController {
      * @return
      */
     @GetMapping("/selectForAxios")
-    public Map<String, Object> selectForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+    public Map<String, Object> selectForAxios(@AuthenticationPrincipal User user,
                                               PetDTO petDTO) {
-        String userId = "";
-        if(refreshToken != null){
-            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-        }
 
         Map<String, Object> resultMap = new HashMap<>();
-        petDTO.setUserId(userId);
+        petDTO.setUserId(user.getUsername());
 
         resultMap.put("result", "SUCCESS");
         resultMap.put("data", petService.selectPet(petDTO));
@@ -108,13 +97,9 @@ public class PetController {
      * @return
      */
     @PostMapping("/updateForAxios")
-    public Map<String, Object> updateForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+    public Map<String, Object> updateForAxios(@AuthenticationPrincipal User user,
                                               @ModelAttribute PetDTO petDTO, HttpServletRequest request) {
-        String userId = "";
-        if(refreshToken != null){
-            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-        }
-        petDTO.setUserId(userId);
+        petDTO.setUserId(user.getUsername());
 
         petService.updatePet(petDTO);
 
@@ -139,15 +124,11 @@ public class PetController {
      * @return
      */
     @GetMapping("/deleteForAxios")
-    public Map<String, Object> deleteForAxios(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+    public Map<String, Object> deleteForAxios(@AuthenticationPrincipal User user,
                                               PetDTO petDTO) {
-        String userId = "";
-        if(refreshToken != null){
-            userId = jwtProvider.parseToken(refreshToken).getBody().getSubject();
-        }
 
         Map<String, Object> resultMap = new HashMap<>();
-        petDTO.setUserId(userId);
+        petDTO.setUserId(user.getUsername());
 
         petService.deletePet(petDTO);
 
